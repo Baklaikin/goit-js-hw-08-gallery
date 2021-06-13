@@ -47,7 +47,7 @@ const onGalleryClick = (e) => {
 
   modalPicture.src = imageSource;
   modalPicture.alt = imageAlt;
-
+// Выход с помощью ESC или нажимая на overlay
   const onKeyPress = (e) => {
     if (e.key !== "Escape" && e.key !== "ArrowRight" && e.key !== "ArrowLeft") {
       return;
@@ -55,7 +55,7 @@ const onGalleryClick = (e) => {
     if (e.key === "Escape") {
       modalClose();
     }
- 
+//  не смог придумать как сделать при помощи стрелок на клавиатуре. Добился переключения на 1 картинку вперед и застрял.Код пока удалил
     if (e.key === "ArrowRight") {
     }
   };
