@@ -37,28 +37,33 @@ refs.gallery.insertAdjacentHTML('afterbegin', markup);
 
 let modalPicture = refs.img;
 
+
 const onGalleryClick = (e) => {
   e.preventDefault();
-  let newPicture = modalPicture;
+
   const imageSource = e.target.dataset.source;
-  // const imageIndex = e.target.dataset.indexNumber;
-  const dataset = e.target.dataset.indexNumber;
+  const imageIndex = Number(e.target.dataset.indexNumber);
   const imageAlt = e.target.alt;
+ 
+  
+  modalPicture.src = imageSource;
+  modalPicture.alt = imageAlt;
+  modalPicture.dataset.indexNumber = imageIndex;
+  
+  refs.overlay.addEventListener('click', modalClose, { once: true });
   refs.lightBox.classList.toggle('is-open');
 
-  newPicture.src = imageSource;
-  newPicture.alt = imageAlt;
-  newPicture.dataset.indexNumber = dataset;
-   refs.overlay.addEventListener('click', modalClose, { once: true });
-  // console.log(newPicture);
+  window.addEventListener('keydown', onKeyPress);
+  
+  
+};
 
 // Выход с помощью ESC или нажимая на overlay
-  const onKeyPress = (e) => {
+   const onKeyPress = (e) => {
     if (e.key !== "Escape" && e.key !== "ArrowRight" && e.key !== "ArrowLeft") {
       return;
     };
     if (e.key === "Escape") {
-      console.log("escape");
       modalClose();
     };
     
@@ -69,13 +74,24 @@ const onGalleryClick = (e) => {
       onArrowLeftClick();
     };
   };
-  window.addEventListener('keydown', onKeyPress);
-  // refs.lightBox.addEventListener('keydown', onArrowRightClick);
-  // refs.lightBox.addEventListener('keydown', onArrowLeftClick);
-  return modalPicture = newPicture;
-};
 
+
+function onArrowRightClick() {
+  let counter = Number(modalPicture.dataset.indexNumber)+1;
+   if (counter ===  imageData.length) {
+     counter = 0;
+  };
+   
+  let newImage = imageData[`${counter}`];
+
+  modalPicture.src = newImage.dataset.source;
+  modalPicture.alt = newImage.alt;
+  modalPicture.dataset.indexNumber = newImage.dataset.indexNumber;
+  
+  return;
+};
 const imageData = document.querySelectorAll('.gallery__image');
+console.log(imageData[1].dataset.source)
 
 
 refs.gallery.addEventListener('click', onGalleryClick);
@@ -83,44 +99,24 @@ refs.gallery.addEventListener('click', onGalleryClick);
 const modalClose = (e) => {
   refs.lightBox.classList.remove('is-open');
   
-  location.reload();
-  
-
   modalPicture.src = '';
   modalPicture.alt = '';
+  modalPicture.dataset.indexNumber = '';
 };
-refs.overlay.addEventListener('click', modalClose, { once: true });
+// refs.overlay.addEventListener('click', modalClose, { once: true });
 refs.closeLightboxBtn.addEventListener('click', modalClose);
 
-
-function onArrowRightClick() {
-  let newPicture = modalPicture;
-  console.log(newPicture);
-  let number = Number(modalPicture.dataset.indexNumber);
-        for (let i = number; i < imageData.length; i++) {
-          if (newPicture.dataset.indexNumber === number.toString() && number <imageData.length - 1) {
-            number += 1;
-            const newImage = imageData[`${number}`];
-            console.log(newImage);
-            newPicture.src = newImage.dataset.source;
-            newPicture.alt = newImage.dataset.alt;
-            newPicture.dataset.indexNumber = newImage.dataset.indexNumber;
-            return newPicture;
-          };
-        }
-};
-
 function onArrowLeftClick() {
-  let newPicture = modalPicture;
-  let number = Number(modalPicture.dataset.indexNumber);
-        for (let i = number; i < imageData.length; i++) {
-          if (newPicture.dataset.indexNumber === number.toString() && number >= 1) {
-            number -= 1;
-            const newImage = imageData[`${number}`];
-            newPicture.src = newImage.dataset.source;
-            newPicture.alt = newImage.dataset.alt;
-            newPicture.dataset.indexNumber = newImage.dataset.indexNumber;
-          };
-          return newPicture;
-        }
+let counter = Number(modalPicture.dataset.indexNumber) - 1;
+   if (counter < 0) {
+     counter = imageData.length-1;
+  };
+   
+  let newImage = imageData[`${counter}`];
+  modalPicture.src = newImage.dataset.source;
+  modalPicture.alt = newImage.alt;
+  modalPicture.dataset.indexNumber = newImage.dataset.indexNumber;
+  
+  return;
+
 };
